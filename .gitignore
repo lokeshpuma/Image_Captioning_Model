@@ -1,0 +1,16 @@
+# Virtual env
+venv/
+
+# Datasets
+Flicker8k_Dataset/
+Flickr8k_text/
+
+# Training artifacts
+
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
