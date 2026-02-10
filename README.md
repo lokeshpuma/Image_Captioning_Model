@@ -34,6 +34,13 @@ pip install tensorflow pillow matplotlib h5py numpy
 
 ## 📁 Dataset Structure
 
+### Download Links
+
+- **Flicker8k_Dataset (images)**: [Download from Google Drive](https://drive.google.com/file/d/1u3oqx36XApnAykFDB6EEWUIfd_CxRQQ9/view)
+- **Flickr8k_text (captions)**: [Download from Google Drive](https://drive.google.com/file/d/1qcRy3WpQv4dGtu65gETtYLWxDPBrRtx1/view)
+
+After downloading, extract them so the folder structure matches:
+
 ```
 project_root/
 ├── Flicker8k_Dataset/          # Image files
@@ -142,54 +149,16 @@ project_root/
 
 **Scripts**: `main.py`, `test.py`
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    ENCODER-DECODER MODEL                 │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  IMAGE BRANCH (Encoder)              TEXT BRANCH         │
-│  ┌──────────────────┐               ┌──────────────┐   │
-│  │ Input (2048)     │               │ Input (seq)  │   │
-│  └────────┬─────────┘               └──────┬───────┘   │
-│           │                                 │            │
-│           ▼                                 ▼            │
-│  ┌──────────────────┐               ┌──────────────┐   │
-│  │ Dropout(0.5)     │               │ Embedding    │   │
-│  └────────┬─────────┘               │ (vocab, 256) │   │
-│           │                          └──────┬───────┘   │
-│           ▼                                 │            │
-│  ┌──────────────────┐                      ▼            │
-│  │ Dense(256, ReLU) │               ┌──────────────┐   │
-│  └────────┬─────────┘               │ Dropout(0.5) │   │
-│           │                          └──────┬───────┘   │
-│           │                                 │            │
-│           │                                 ▼            │
-│           │                          ┌──────────────┐   │
-│           │                          │ LSTM(256)    │   │
-│           │                          └──────┬───────┘   │
-│           │                                 │            │
-│           └────────────┬────────────────────┘            │
-│                        │                                 │
-│                        ▼                                 │
-│               ┌──────────────────┐                      │
-│               │   Add (Merge)    │                      │
-│               └────────┬─────────┘                      │
-│                        │                                 │
-│                        ▼                                 │
-│               ┌──────────────────┐                      │
-│               │ Dense(256, ReLU) │                      │
-│               └────────┬─────────┘                      │
-│                        │                                 │
-│                        ▼                                 │
-│               ┌──────────────────┐                      │
-│               │Dense(vocab_size) │                      │
-│               │   Softmax        │                      │
-│               └──────────────────┘                      │
-│                        │                                 │
-│                        ▼                                 │
-│                  Next Word Prediction                    │
-└─────────────────────────────────────────────────────────┘
-```
+| Component            | Input Shape        | Layers (in order)                                                                 | Output Shape           |
+|----------------------|--------------------|------------------------------------------------------------------------------------|------------------------|
+| **Image branch**     | `(2048,)`          | `Dropout(0.5) → Dense(256, relu)`                                                  | `(256,)`               |
+| **Text branch**      | `(max_length,)`    | `Embedding(vocab_size, 256, mask_zero=True) → Dropout(0.5) → LSTM(256)`           | `(256,)`               |
+| **Fusion**           | two `(256,)` vectors | `Add()` (image + text) → Dense(256, relu)                                          | `(256,)`               |
+| **Output layer**     | `(256,)`           | `Dense(vocab_size, softmax)`                                                       | `(vocab_size,)`        |
+
+This forms a classic **encoder–decoder** architecture where:
+- The **encoder** maps each image to a 256‑D feature vector.
+- The **decoder** consumes the partial caption and, together with the image vector, predicts the **next word** at each time step.
 
 **Compilation**:
 - **Loss**: Categorical cross-entropy
