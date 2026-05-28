@@ -14,7 +14,7 @@ This project implements an encoder-decoder architecture combining:
 - [Dataset Structure](#dataset-structure)
 - [Workflow](#workflow)
 - [Usage](#usage)
-- [Frontend (GitHub Pages)](#frontend-github-pages)
+- [Streamlit App](#streamlit-app)
 - [Project Structure](#project-structure)
 - [Future Improvements](#future-improvements)
 
@@ -251,13 +251,26 @@ python test.py -i Flicker8k_Dataset/189721896_1ffe76d89e.jpg
 
 **Replace** `-i` argument with any image path.
 
-### Frontend (GitHub Pages)
+### Streamlit App
 
-The deployable static frontend lives in `frontend/`.
+Run the interactive app with your trained artifacts:
 
-- Local preview: open `frontend/index.html` in your browser
-- Auto deploy: push to `main` triggers `.github/workflows/deploy-pages.yml`
-- After first run, ensure GitHub Pages source is set to **GitHub Actions** in repository settings
+```bash
+source venv/bin/activate
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+The app uses:
+- `models/model_*.h5` checkpoint (latest by default)
+- `tokenizer.p`
+- `max_length.txt`
+
+If any file is missing, train first with:
+
+```bash
+python main.py
+```
 
 ---
 
@@ -276,8 +289,8 @@ image/
 │   └── ...
 ├── main.py              # Training pipeline
 ├── test.py              # Inference script
-├── frontend/            # Static frontend for GitHub Pages
-├── .github/workflows/   # CI workflow (Pages deploy)
+├── streamlit_app.py     # Streamlit web app for caption generation
+├── requirements.txt     # Python dependencies
 └── README.md            # This file
 ```
 
