@@ -14,6 +14,7 @@ This project implements an encoder-decoder architecture combining:
 - [Dataset Structure](#dataset-structure)
 - [Workflow](#workflow)
 - [Usage](#usage)
+- [Frontend (GitHub Pages)](#frontend-github-pages)
 - [Project Structure](#project-structure)
 - [Future Improvements](#future-improvements)
 
@@ -66,6 +67,8 @@ project_root/
     ├── model_1.h5
     └── ...
 ```
+
+These files are generated locally and are intentionally ignored in git.
 
 ## 🔄 Workflow
 
@@ -248,6 +251,14 @@ python test.py -i Flicker8k_Dataset/189721896_1ffe76d89e.jpg
 
 **Replace** `-i` argument with any image path.
 
+### Frontend (GitHub Pages)
+
+The deployable static frontend lives in `frontend/`.
+
+- Local preview: open `frontend/index.html` in your browser
+- Auto deploy: push to `main` triggers `.github/workflows/deploy-pages.yml`
+- After first run, ensure GitHub Pages source is set to **GitHub Actions** in repository settings
+
 ---
 
 ## 📂 Project Structure
@@ -265,10 +276,8 @@ image/
 │   └── ...
 ├── main.py              # Training pipeline
 ├── test.py              # Inference script
-├── descriptions.txt     # Processed captions
-├── features.p           # CNN features
-├── tokenizer.p          # Vocabulary tokenizer
-├── max_length.txt       # Sequence length
+├── frontend/            # Static frontend for GitHub Pages
+├── .github/workflows/   # CI workflow (Pages deploy)
 └── README.md            # This file
 ```
 

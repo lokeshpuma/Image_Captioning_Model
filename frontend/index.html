@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Captioning Model</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Image Captioning Model</h1>
+      <p class="subtitle">
+        CNN-LSTM based image caption generator trained on Flickr8k.
+      </p>
+
+      <section class="card">
+        <h2>Project</h2>
+        <p>
+          This project uses Xception for image feature extraction and an LSTM
+          decoder to generate captions word-by-word.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>How to Run Inference Locally</h2>
+        <pre><code>python test.py -i path/to/image.jpg</code></pre>
+      </section>
+
+      <section class="card">
+        <h2>Quick Facts</h2>
+        <ul id="facts"></ul>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

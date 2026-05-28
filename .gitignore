@@ -6,6 +6,11 @@ Flicker8k_Dataset/
 Flickr8k_text/
 
 # Training artifacts
+descriptions.txt
+features.p
+tokenizer.p
+max_length.txt
+models/*.h5
 
 
 # Python cache
