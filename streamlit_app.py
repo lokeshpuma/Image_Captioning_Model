@@ -6,7 +6,9 @@ import numpy as np
 import streamlit as st
 from PIL import Image
 from keras.applications.xception import Xception
-from keras.models import load_model
+from tensorflow.keras.layers import Input, Dense, LSTM, Embedding, Dropout
+from tensorflow.keras.layers import add
+from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
@@ -54,12 +56,31 @@ def find_latest_checkpoint(models_dir: Path):
     return checkpoints[-1]
 
 
+def define_caption_model(vocab_size: int, max_len: int):
+    inputs1 = Input(shape=(2048,), name="input_1")
+    fe1 = Dropout(0.5)(inputs1)
+    fe2 = Dense(256, activation="relu")(fe1)
+
+    inputs2 = Input(shape=(max_len,), name="input_2")
+    se1 = Embedding(vocab_size, 256, mask_zero=True)(inputs2)
+    se2 = Dropout(0.5)(se1)
+    se3 = LSTM(256)(se2)
+
+    decoder1 = add([fe2, se3])
+    decoder2 = Dense(256, activation="relu")(decoder1)
+    outputs = Dense(vocab_size, activation="softmax")(decoder2)
+
+    return Model(inputs=[inputs1, inputs2], outputs=outputs)
+
+
 @st.cache_resource
 def load_artifacts(model_path: str, tokenizer_path: str, max_len_path: str):
-    caption_model = load_model(model_path, compile=False)
     tokenizer = load(open(tokenizer_path, "rb"))
     with open(max_len_path, "r", encoding="utf-8") as f:
         max_len = int(f.read().strip())
+    vocab_size = len(tokenizer.word_index) + 1
+    caption_model = define_caption_model(vocab_size, max_len)
+    caption_model.load_weights(model_path)
     encoder = Xception(include_top=False, pooling="avg", weights=None)
     return caption_model, tokenizer, max_len, encoder
 
