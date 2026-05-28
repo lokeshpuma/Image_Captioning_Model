@@ -263,6 +263,8 @@ streamlit run streamlit_app.py
 
 For Streamlit Community Cloud deployment, this repository includes `runtime.txt`
 to force a TensorFlow-compatible Python version.
+It also includes `pyproject.toml` with `requires-python = ">=3.11,<3.12"` for
+`uv`-based installs.
 
 The app uses:
 - `models/model_*.h5` checkpoint (latest by default)
