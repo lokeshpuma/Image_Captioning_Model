@@ -1,6 +1,5 @@
-tensorflow
-streamlit
-pillow
-numpy
-matplotlib
-h5py
+tensorflow==2.16.2
+streamlit==1.37.1
+pillow==10.4.0
+numpy==1.26.4
+h5py==3.11.0

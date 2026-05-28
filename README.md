@@ -261,6 +261,9 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
+For Streamlit Community Cloud deployment, this repository includes `runtime.txt`
+to force a TensorFlow-compatible Python version.
+
 The app uses:
 - `models/model_*.h5` checkpoint (latest by default)
 - `tokenizer.p`
